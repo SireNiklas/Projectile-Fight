@@ -30,9 +30,9 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
+        // Updates Clients Side!!!! DO NOT MESS THIS UP AGIAN!!!
         if (other.gameObject.CompareTag("Player") && other.gameObject != Parent) {
-            PlayerStatsHandler.RequestUpdateHealthServerRPC();
+            other.gameObject.GetComponent<PlayerStatsHandler>().RequestUpdateHealthServerRPC();
         }
 
     }

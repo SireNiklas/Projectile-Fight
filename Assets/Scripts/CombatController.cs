@@ -2,6 +2,7 @@ using StarterAssets;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CombatController : NetworkBehaviour
 {
@@ -11,6 +12,7 @@ public class CombatController : NetworkBehaviour
     [SerializeField] private float _projectileSpeed = 700;
     [SerializeField] private float _cooldown = 0.5f;
     [SerializeField] private Transform _spawner;
+    private PlayerStatsHandler _playerStatsHandler;
 
     private float _lastFired = float.MinValue;
     private bool _fired;
@@ -22,7 +24,6 @@ public class CombatController : NetworkBehaviour
 
 private void Update()
     {
-        if (!IsOwner) return;
 
         if (_firstPersonController._input.shoot && _lastFired + _cooldown < Time.time)
         {
@@ -35,6 +36,9 @@ private void Update()
 
                 _lastFired = Time.time;
                 var dir = raycastHit.point;
+
+                // Should update clients side!!!!
+                //raycastHit.collider.gameObject.GetComponent<PlayerStatsHandler>().UpdateHealthClientRPC();
 
                 // Send off the request to be executed on all clients
                 RequestFireServerRpc(dir);

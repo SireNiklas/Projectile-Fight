@@ -7,21 +7,21 @@ public class PlayerStatsHandler : NetworkBehaviour
 
     public NetworkVariable<int> netHealth = new NetworkVariable<int>(100);
 
-    private void DamageEnemy()
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestUpdateHealthServerRPC()
     {
-        netHealth.Value -= 1;
-        Debug.Log(OwnerClientId + "; HEALTH VALUE: " + netHealth.Value);
+        UpdateHealthClientRPC();
     }
 
     [ClientRpc]
     private void UpdateHealthClientRPC()
     {
-        if (!IsOwner) DamageEnemy();
+        if (IsServer) DamageEnemy();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestUpdateHealthServerRPC()
+    private void DamageEnemy()
     {
-        UpdateHealthClientRPC();
+        netHealth.Value -= 1;
+        Debug.Log(OwnerClientId + "; HEALTH VALUE: " + netHealth.Value);
     }
 }
