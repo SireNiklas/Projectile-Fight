@@ -33,6 +33,13 @@ public class Projectile : MonoBehaviour
         // Updates Clients Side!!!! DO NOT MESS THIS UP AGIAN!!!
         if (other.gameObject.CompareTag("Player") && other.gameObject != Parent) {
             other.gameObject.GetComponent<PlayerStatsHandler>().RequestUpdateHealthServerRPC();
+            other.gameObject.GetComponent<PlayerStatsHandler>().TakeDamage();
+            other.gameObject.GetComponent<PlayerStatsHandler>().LocalUpdateHealth();
+            Destroy(this);
+        }
+
+        if (other.gameObject.CompareTag("Static")) {
+            Destroy(this);
         }
 
     }

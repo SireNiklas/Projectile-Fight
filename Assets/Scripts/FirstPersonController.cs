@@ -22,7 +22,8 @@ namespace StarterAssets
         [Tooltip("Sprint speed of the character in m/s")]
 		public float SprintSpeed = 6.0f;
 		[Tooltip("Rotation speed of the character")]
-		public float RotationSpeed = 1.0f;
+        [Range(1, 10)]
+        public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 
@@ -79,7 +80,9 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 		private CinemachineVirtualCamera _cinemachineVirtualCamera;
 
-		private const float _threshold = 0.01f;
+		[SerializeField] private GameObject _hud;
+
+        private const float _threshold = 0.00001f;
 
 		private bool IsCurrentDeviceMouse
 		{
@@ -116,21 +119,20 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
-
 			transform.position = new Vector3(Random.Range(_spawnPositionRange.x, _spawnPositionRange.y), 0, Random.Range(_spawnPositionRange.x, _spawnPositionRange.y));
 
+			Cursor.lockState = CursorLockMode.Locked;
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
-			if (IsClient && IsOwner)
-			{
+			if (!IsClient && !IsOwner) return;
 				_playerInput = GetComponent<PlayerInput>();
 				_playerInput.enabled = true;
+				_hud.SetActive(true);
 				_cinemachineVirtualCamera.Follow = CinemachineCameraTarget.transform;
-            }
         }
 
         private void Update()
@@ -140,14 +142,15 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
-		}
 
-		private void LateUpdate()
+        }
+
+        private void LateUpdate()
 		{
-			CameraRotation();
-		}
+            CameraRotation();
+        }
 
-		private void GroundedCheck()
+        private void GroundedCheck()
 		{
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);

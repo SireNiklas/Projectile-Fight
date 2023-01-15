@@ -7,12 +7,15 @@ public class HUDUIHandler : MonoBehaviour
 {
 
     private PlayerStatsHandler _playerStatsHandler;
-    [SerializeField] private Slider _playerHealthSlider;
+    public Image _playerHealthBarImage;
+    private int _playerHealth;
 
-    public void UpdatehealthSlider()
+    private void Start()
     {
+    }
 
-
-
+    private void Update()
+    {
+        _playerHealthBarImage.fillAmount -= 1;
     }
 }

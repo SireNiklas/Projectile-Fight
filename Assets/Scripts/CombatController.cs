@@ -17,6 +17,9 @@ public class CombatController : NetworkBehaviour
     private float _lastFired = float.MinValue;
     private bool _fired;
 
+    private Vector3 aimDir;
+    private Vector3 aimAt;
+
     private void Start()
     {
         _firstPersonController = GetComponent<FirstPersonController>();
@@ -31,33 +34,32 @@ private void Update()
 
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
             Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+            aimAt = Camera.main.transform.forward;
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f))
             {
 
                 _lastFired = Time.time;
-                var dir = raycastHit.point;
-
+                aimAt = raycastHit.point;
+                aimDir = (aimAt - _spawner.position).normalized;
+                 
                 // Should update clients side!!!!
                 //raycastHit.collider.gameObject.GetComponent<PlayerStatsHandler>().UpdateHealthClientRPC();
 
                 // Send off the request to be executed on all clients
-                RequestFireServerRpc(dir);
+                RequestFireServerRpc(aimDir);
 
                 // Fire locally immediately
-                ExecuteShoot(dir);
+                ExecuteShoot(aimDir);
                 StartCoroutine(ToggleLagIndicator());
             }
             else
             {
 
-                _lastFired = Time.time;
-                var dir = Camera.main.transform.forward;
-
                 // Send off the request to be executed on all clients
-                RequestFireServerRpc(dir);
+                RequestFireServerRpc(aimAt);
 
                 // Fire locally immediately
-                ExecuteShoot(dir);
+                ExecuteShoot(aimAt);
                 StartCoroutine(ToggleLagIndicator());
             }
         }
@@ -72,17 +74,13 @@ private void Update()
     [ClientRpc]
     private void FireClientRpc(Vector3 dir)
     {
-        if (!IsOwner) ExecuteShoot(dir);
+        if (!IsOwner) /*IsServer works, if your not giving anyother input. Same !IsOwner*/ ExecuteShoot(dir);
     }
 
     private void ExecuteShoot(Vector3 dir)
     {
-        Vector3 aimDir;
-
-        if (dir != Camera.main.transform.forward) aimDir = (dir - _spawner.position).normalized;
-        else aimDir = Camera.main.transform.forward;
-        var projectile = Instantiate(_projectile, _spawner.position, Quaternion.LookRotation(aimDir, Vector3.up));
-        projectile.Init(aimDir * _projectileSpeed);
+        var projectile = Instantiate(_projectile, _spawner.position, Quaternion.LookRotation(dir, Vector3.up));
+        projectile.Init(dir * _projectileSpeed);
         projectile.PlayerStatsHandler = this.GetComponent<PlayerStatsHandler>();
         projectile.Parent = this.gameObject;
         //AudioSource.PlayClipAtPoint(_spawnClip, transform.position);

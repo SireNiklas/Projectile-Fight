@@ -1,27 +1,55 @@
+using QFSW.QC;
 using Sir.Core.Singletons;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStatsHandler : NetworkBehaviour
 {
+    //private HUDUIHandler _hUDUIHandler;
 
     public NetworkVariable<int> netHealth = new NetworkVariable<int>(100);
+    [SerializeField] private int playerHealth = 20;
+    [SerializeField] private Slider _playerHealthBar;
+    private int fillAmount;
+
+
+    // REFACTOR THIS!!! IT FEELS WRONG.
+    private void Start()
+    {
+        _playerHealthBar.maxValue = playerHealth;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void RequestUpdateHealthServerRPC()
     {
-        UpdateHealthClientRPC();
+        HealtUpdateClientRpc();
     }
 
     [ClientRpc]
-    private void UpdateHealthClientRPC()
+    private void HealtUpdateClientRpc()
     {
-        if (IsServer) DamageEnemy();
+
+        if (IsServer) UpdateHealth();
+
+
     }
 
-    private void DamageEnemy()
+    private void UpdateHealth()
     {
-        netHealth.Value -= 1;
-        Debug.Log(OwnerClientId + "; HEALTH VALUE: " + netHealth.Value);
+        netHealth.Value = fillAmount;
+        if (playerHealth <= 0) this.NetworkObject.Despawn();
+}
+
+        public void TakeDamage()
+    {
+        fillAmount = playerHealth -= 1;
+    }
+
+    public void LocalUpdateHealth()
+    {
+
+        _playerHealthBar.value = fillAmount;
+
     }
 }
