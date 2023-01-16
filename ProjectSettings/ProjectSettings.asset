@@ -695,11 +695,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: 387bc0d5-14ec-43da-af26-26b484271026
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: Projectile Fight
+  organizationId: sirniklas
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 

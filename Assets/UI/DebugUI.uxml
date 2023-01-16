@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/MainMenuUIStylesheet.uss?fileID=7433441132597879392&amp;guid=ac8e64eae700f4a4faf529d32bcea1a1&amp;type=3#MainMenuUIStylesheet" />
+    <ui:VisualElement style="flex-grow: 1; justify-content: flex-end;">
+        <ui:VisualElement name="Container" style="flex-basis: 20%; align-items: center; justify-content: space-around; padding-right: 15%; padding-left: 15%; background-color: rgba(0, 0, 0, 0.69); border-top-width: 3px; border-top-color: rgb(0, 0, 0); flex-direction: row;">
+            <ui:Button text="Server" display-tooltip-when-elided="true" name="serverBtn" class="button buttonClicked buttonColor" style="border-top-width: 1px; border-right-width: 2px; border-left-width: 2px;" />
+            <ui:Button text="Host" display-tooltip-when-elided="true" name="hostBtn" class="button" style="border-left-width: 2px; border-right-width: 2px; border-top-width: 1px;" />
+            <ui:Button text="Client" display-tooltip-when-elided="true" name="clientBtn" class="button buttonColor" style="border-left-width: 2px; border-right-width: 2px; border-top-width: 1px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

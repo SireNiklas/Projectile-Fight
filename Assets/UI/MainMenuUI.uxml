@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/MainMenuUIStylesheet.uss?fileID=7433441132597879392&amp;guid=ac8e64eae700f4a4faf529d32bcea1a1&amp;type=3#MainMenuUIStylesheet" />
+    <ui:VisualElement style="flex-grow: 1; justify-content: flex-end;">
+        <ui:VisualElement name="Container" style="flex-basis: 20%; align-items: center; justify-content: space-around; padding-right: 15%; padding-left: 15%; background-color: rgba(0, 0, 0, 0.69); border-top-width: 3px; border-top-color: rgb(0, 0, 0); flex-direction: row;">
+            <ui:Button text="Lobby Browser" display-tooltip-when-elided="true" name="lobbyBtn" class="button buttonClicked buttonColor" style="border-top-width: 1px; border-right-width: 2px; border-left-width: 2px;" />
+            <ui:Button text="Options" display-tooltip-when-elided="true" name="optionsBtn" class="button" style="border-left-width: 2px; border-right-width: 2px; border-top-width: 1px;" />
+            <ui:Button text="Exit to Desktop" display-tooltip-when-elided="true" name="quitBtn" class="button buttonColor" style="border-left-width: 2px; border-right-width: 2px; border-top-width: 1px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
