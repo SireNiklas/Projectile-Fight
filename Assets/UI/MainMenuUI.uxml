@@ -1,10 +1,17 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/MainMenuUIStylesheet.uss?fileID=7433441132597879392&amp;guid=ac8e64eae700f4a4faf529d32bcea1a1&amp;type=3#MainMenuUIStylesheet" />
-    <ui:VisualElement style="flex-grow: 1; justify-content: flex-end;">
-        <ui:VisualElement name="Container" style="flex-basis: 20%; align-items: center; justify-content: space-around; padding-right: 15%; padding-left: 15%; background-color: rgba(0, 0, 0, 0.69); border-top-width: 3px; border-top-color: rgb(0, 0, 0); flex-direction: row;">
-            <ui:Button text="Lobby Browser" display-tooltip-when-elided="true" name="lobbyBtn" class="button buttonClicked buttonColor" style="border-top-width: 1px; border-right-width: 2px; border-left-width: 2px;" />
-            <ui:Button text="Options" display-tooltip-when-elided="true" name="optionsBtn" class="button" style="border-left-width: 2px; border-right-width: 2px; border-top-width: 1px;" />
-            <ui:Button text="Exit to Desktop" display-tooltip-when-elided="true" name="quitBtn" class="button buttonColor" style="border-left-width: 2px; border-right-width: 2px; border-top-width: 1px;" />
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/stylesheet.uss?fileID=7433441132597879392&amp;guid=9048b18706eb7f34ca6bdf9d88727042&amp;type=3#stylesheet" />
+    <ui:VisualElement name="container" class="container" style="flex-grow: 1; align-items: stretch; justify-content: space-around;">
+        <ui:VisualElement name="headcontainer" class="container" style="flex-grow: 0.15;">
+            <ui:Label text="Projectile Fight" display-tooltip-when-elided="true" class="title" style="font-size: 87px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: upper-left; color: rgb(255, 255, 255); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="bodycontainer" class="container" style="flex-grow: 1; flex-direction: column;">
+            <ui:Button text="Quick Join" display-tooltip-when-elided="true" name="quickjoin" class="button" />
+            <ui:Button text="Custom Game" display-tooltip-when-elided="true" name="customgame" class="button" />
+            <ui:Button text="Options" display-tooltip-when-elided="true" name="options" class="button" />
+        </ui:VisualElement>
+        <ui:VisualElement name="footcontainer" class="container" style="flex-grow: 0.07; justify-content: space-between; align-items: flex-end; flex-direction: row;">
+            <ui:Label text="Build: In-Development" display-tooltip-when-elided="true" class="buildlabel" style="color: rgb(255, 255, 255);" />
+            <ui:Button text="Quit" display-tooltip-when-elided="true" name="quit" class="button" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

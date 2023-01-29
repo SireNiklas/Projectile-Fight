@@ -1,0 +1,68 @@
+.container {
+    justify-content: center;
+    flex-grow: 0;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.33);
+    border-left-color: rgba(0, 0, 0, 0.67);
+    border-right-color: rgba(0, 0, 0, 0.67);
+    border-top-color: rgba(0, 0, 0, 0.67);
+    border-bottom-color: rgba(0, 0, 0, 0.67);
+    border-top-left-radius: 1px;
+    border-bottom-left-radius: 1px;
+    border-top-right-radius: 1px;
+    border-bottom-right-radius: 1px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+.title {
+    justify-content: flex-start;
+    font-size: 76px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-left-color: rgba(0, 0, 0, 255);
+    border-right-color: rgba(0, 0, 0, 255);
+    border-top-color: rgba(0, 0, 0, 255);
+    border-bottom-color: rgba(0, 0, 0, 255);
+    -unity-font: url('project://database/Assets/Plugins/QFSW/Quantum%20Console/Source/Fonts/OfficeCodePro-Bold.ttf?fileID=12800000&guid=d0fb8e3996ea8e7419e719f298606d45&type=3#OfficeCodePro-Bold');
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.button {
+    font-size: 64px;
+    margin-left: 27px;
+    margin-right: 27px;
+    margin-top: 27px;
+    margin-bottom: 27px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: rgba(0, 0, 0, 255);
+    background-color: rgba(255, 255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.button:hover {
+    background-color: rgba(128, 128, 128, 255);
+}
+
+.button:focus {
+    background-color: rgba(255, 255, 255, 0.67);
+}
+
+.buildlabel {
+    font-size: 12px;
+}

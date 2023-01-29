@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/stylesheet.uss?fileID=7433441132597879392&amp;guid=9048b18706eb7f34ca6bdf9d88727042&amp;type=3#stylesheet" />
+    <ui:VisualElement name="container" class="container" style="flex-grow: 1; flex-direction: column; align-items: stretch; justify-content: space-around;">
+        <ui:VisualElement name="headcontainer" class="container" style="flex-grow: 0.15; -unity-text-align: upper-left; align-items: center; justify-content: center; flex-direction: column; flex-wrap: nowrap;">
+            <ui:Label text="Custom Games" display-tooltip-when-elided="true" class="title" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; color: rgb(255, 255, 255); background-color: rgba(255, 255, 255, 0); font-size: 87px;" />
+            <ui:Button text="Create Game" display-tooltip-when-elided="true" name="creategame" class="button" style="justify-content: flex-start; align-items: stretch; font-size: 23px; border-top-left-radius: 7px; border-bottom-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="bodycontainer" class="container" style="flex-grow: 1; justify-content: space-around; align-items: stretch;">
+            <ui:ListView focusable="true" style="justify-content: space-around; align-items: stretch; flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="footcontainer" class="container" style="flex-grow: 0.07; justify-content: space-between; align-items: flex-end; flex-direction: row;">
+            <ui:Label text="Build: In-Development" display-tooltip-when-elided="true" class="buildlabel" style="color: rgb(255, 255, 255);" />
+            <ui:Button text="Back" display-tooltip-when-elided="true" name="back" class="button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
