@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class MainMenuUIHandler : MonoBehaviour
 {
-
+    SteamLobbyHandler steamLobbyHandler;
     GameObject UIObjectToHide, UIObjecToShow;
 
     private void OnEnable()
@@ -16,9 +16,12 @@ public class MainMenuUIHandler : MonoBehaviour
         Button customGameBtn = root.Q<Button>("customgame");
         Button quickBtn = root.Q<Button>("quit");
 
-
-        quickJoinBtn.clicked += () => Debug.Log("QUICK JOIN!");
-        customGameBtn.clicked += () => UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[0], UIObjecToShow = UIManager.Instance.UIObjects[1]);
+        quickJoinBtn.clicked += () => { GameNetworkManager.Instance.StartHost(6); this.gameObject.SetActive(false); };
+        customGameBtn.clicked += () => {
+            GameNetworkManager.Instance.StartClient(76561198116904586); this.gameObject.SetActive(false);
+            //UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[0], UIObjecToShow = UIManager.Instance.UIObjects[1]); 
+            ///*steamLobbyHandler.CustomGame(); */
+        };
         quickBtn.clicked += () => Application.Quit();
     }
 

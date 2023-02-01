@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class SteamLobbyHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public void CustomGame()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
