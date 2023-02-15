@@ -16,7 +16,7 @@ public class DebugMenuHandler: MonoBehaviour
         Button customGameBtn = root.Q<Button>("customgame");
         Button quickBtn = root.Q<Button>("quit");
 
-        quickJoinBtn.clicked += () => { GameNetworkManager.Instance.StartHost(6); this.gameObject.SetActive(false); };
+        quickJoinBtn.clicked += () => { SteamManager.Instance.StartHost(6); this.gameObject.SetActive(false); };
         customGameBtn.clicked += () => { 
             UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[0], UIObjecToShow = UIManager.Instance.UIObjects[1]); 
             /*steamLobbyHandler.CustomGame(); */

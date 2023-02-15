@@ -10,6 +10,8 @@ public class UIManager : Singleton<UIManager>
 
     public List<GameObject> UIObjects = new List<GameObject>();
 
+    public string lobbyName = "Untitled Lobby";
+
     public void SwapUI(GameObject UIObjectToHide, GameObject UIObjectToShow)
     {
         UIObjectToHide.SetActive(false);

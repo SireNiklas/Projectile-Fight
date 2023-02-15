@@ -2,7 +2,7 @@ using Sir.Core.Singletons;
 using System.Collections;
 using UnityEngine;
 
-public class GameManager : NetworkSingleton<GameManager>
+public class GameManager : Singleton<GameManager>
 {
 
     public bool connected;

@@ -6,13 +6,36 @@ using QFSW.QC;
 using Unity.Netcode;
 using Netcode.Transports.Facepunch;
 using Sir.Core.Singletons;
+using System.Linq;
+using System.Collections.Generic;
+using Mono.CSharp;
 
-public class GameNetworkManager : Singleton<GameNetworkManager>
+public class SteamManager : Singleton<SteamManager>
 {
     private FacepunchTransport transport = null;
-    public Lobby? currentLobby { get; private set; } = null;
+    public Lobby? lobby { get; private set; } = null;
+    
+    GameObject UIObjectToHide, UIObjecToShow;
 
-    public ulong hostId;
+
+    public List<Lobby> activeLobbies = new List<Lobby>();
+    public Lobby[] lobbiesList;
+    
+    public async void JoinLobby(SteamId _lobbyId)
+    {
+        SteamManager.Instance.lobbiesList = await SteamMatchmaking.LobbyList.WithMaxResults(5).WithKeyValue("isTesting", "TRUE").RequestAsync();
+        
+        foreach (Lobby lobby in SteamManager.Instance.lobbiesList.ToList())
+        {
+            activeLobbies.Add(lobby);
+            if (lobby.Id == _lobbyId)
+            {
+                await lobby.Join();
+
+            }
+        }
+        UIManager.Instance.UIObjects[1].SetActive(false);
+    }
 
     private void Start()
     {
@@ -38,20 +61,19 @@ public class GameNetworkManager : Singleton<GameNetworkManager>
         SteamMatchmaking.OnLobbyGameCreated -= SteamMatchmaking_OnLobbyGameCreated;
         SteamFriends.OnGameLobbyJoinRequested -= SteamMatchmaking_OnGameLobbyJoinRequested;
 
-        if (NetworkManager.Singleton == null)
-        {
-            return;
-        }
+        if (NetworkManager.Singleton == null) return;
+
         NetworkManager.Singleton.OnServerStarted -= Singleton_OnServerStarted;
         NetworkManager.Singleton.OnClientConnectedCallback -= Singleton_OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectedCallback;
     }
-
+    
     private void OnApplicationQuit()
     {
         Disconnected();
     }
 
+    #region SteamEvents
     private void SteamMatchmaking_OnLobbyCreated(Result _result, Lobby _lobby)
     {
         if (_result != Result.OK)
@@ -63,20 +85,20 @@ public class GameNetworkManager : Singleton<GameNetworkManager>
         _lobby.SetPublic(); // Can be private lobby.
         _lobby.SetJoinable(true);
         _lobby.SetGameServer(_lobby.Owner.Id);
-        Debug.Log("lobby created FakeSteamName");
+        _lobby.SetData("isTesting", "TRUE");
+        _lobby.SetData("lobbyName", UIManager.Instance.lobbyName);
+        Debug.Log("LOBBY ID " + _lobby.Id);
 
     }
-
+    
     private void SteamMatchmaking_OnLobbyEntered(Lobby _lobby)
     {
         if (NetworkManager.Singleton.IsHost)
         {
             return;
         }
-        Debug.Log("ENTERED LOBBY 1");
-        StartClient(currentLobby.Value.Owner.Id);
-        Debug.Log("ENTERED LOBBY 2");
-
+        
+        StartClient(_lobby.Owner.Id);
     }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby _lobby, Friend _friend)
@@ -110,37 +132,30 @@ public class GameNetworkManager : Singleton<GameNetworkManager>
             Debug.Log("Failed to create lobby");
         } else
         {
-            currentLobby = _lobby;
-            //GameManager.Instance.ConnectedAsClient();
-            Debug.Log("Joined Lobby");
+            lobby = _lobby;
         }
     }
+    #endregion
 
+    #region Netcode for Gameobjects Host and Client start methods.
     [Command]
     public async void StartHost(int _maxMembers)
     {
         NetworkManager.Singleton.OnServerStarted += Singleton_OnServerStarted;
         NetworkManager.Singleton.StartHost();
-        //GameManager.Instance.myClientId = NetworkManager.Singleton.LocalClientId;
-        currentLobby = await SteamMatchmaking.CreateLobbyAsync(_maxMembers);
+
+        lobby = await SteamMatchmaking.CreateLobbyAsync(_maxMembers);
+
     }
 
     public void StartClient(SteamId _steamId)
     {
-        Debug.Log("STARTED CLIENT, ALSO BEFORE CLIENT DISCONNECT AND CONNECT START.");
-
+        // This must be called prior to client start.
+        transport.targetSteamId = _steamId;
+        
         NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectedCallback;
-        transport.targetSteamId = _steamId;
-
-        Debug.Log("STARTED CLIENT, ALSO BEFORE CLIENT START.");
-
-        NetworkManager.Singleton.StartClient();
-
-        Debug.Log("STARTED CLIENT, ALSO AFTER CLIENT START.");
-
-        //GameManager.Instance.myClientId = NetworkManager.Singleton.LocalClientId;
-
+        
         if (NetworkManager.Singleton.StartClient())
         {
             Debug.Log("Client has started");
@@ -149,7 +164,7 @@ public class GameNetworkManager : Singleton<GameNetworkManager>
 
     public void Disconnected()
     {
-        currentLobby?.Leave();
+        lobby?.Leave();
         if (NetworkManager.Singleton!= null)
         {
             return;
@@ -168,13 +183,13 @@ public class GameNetworkManager : Singleton<GameNetworkManager>
 
     private void Singleton_OnServerStarted()
     {
-        Debug.Log("Host Started");
         //GameManager.Instance.HostCreated();
     }
 
     private void Singleton_OnClientConnectedCallback(ulong obj)
     {
-        Debug.Log($"Client has connected : AnotherFakeSteamName");
+        UIManager.Instance.UIObjects[0].SetActive(false);
+        NetworkManager.Singleton.StartClient();
     }
 
     private void Singleton_OnClientDisconnectedCallback(ulong _clientId)
@@ -185,7 +200,7 @@ public class GameNetworkManager : Singleton<GameNetworkManager>
             Disconnected();
         }
     }
-
+    #endregion
 
     //[Command]
     //public void CopyID()

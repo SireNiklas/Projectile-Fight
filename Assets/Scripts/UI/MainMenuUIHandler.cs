@@ -12,18 +12,15 @@ public class MainMenuUIHandler : MonoBehaviour
     {
         VisualElement root = GetComponent<UIDocument>().rootVisualElement;
 
-        Button quickJoinBtn = root.Q<Button>("quickjoin");
-        Button customGameBtn = root.Q<Button>("customgame");
-        Button quickBtn = root.Q<Button>("quit");
+        Button hostGameBtn = root.Q<Button>("hostGameBtn");
+        //Button joinGameBtn = root.Q<Button>("joinGameBtn");
+        Button optionsBtn = root.Q<Button>("optionsBtn");
+        Button quitBtn = root.Q<Button>("quitBtn");
 
-        quickJoinBtn.clicked += () => { GameNetworkManager.Instance.StartHost(6); this.gameObject.SetActive(false); };
-        customGameBtn.clicked += () => {
-            GameNetworkManager.Instance.StartClient(76561198116904586); this.gameObject.SetActive(false);
-            //UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[0], UIObjecToShow = UIManager.Instance.UIObjects[1]); 
-            ///*steamLobbyHandler.CustomGame(); */
-        };
-        quickBtn.clicked += () => Application.Quit();
+        hostGameBtn.clicked += () => { UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[0], UIObjecToShow = UIManager.Instance.UIObjects[1]); };
+        //joinGameBtn.clicked += () => { UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[0], UIObjecToShow = UIManager.Instance.UIObjects[1]); };
+        //optionsBtn.clicked += () => { UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[0], UIObjecToShow = UIManager.Instance.UIObjects[1]); };
+        quitBtn.clicked += () => Application.Quit();
+
     }
-
-
 }

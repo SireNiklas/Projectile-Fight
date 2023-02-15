@@ -6,7 +6,7 @@
             <ui:Button text="Create Lobby" display-tooltip-when-elided="true" name="createlobby" class="button" style="justify-content: flex-start; align-items: stretch; font-size: 23px; border-top-left-radius: 7px; border-bottom-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px;" />
         </ui:VisualElement>
         <ui:VisualElement name="bodycontainer" class="container" style="flex-grow: 1; justify-content: space-around; align-items: center;">
-            <ui:TextField picking-mode="Ignore" label="Text Field" value="filler text" text="Lobby Name" />
+            <ui:TextField picking-mode="Ignore" label="Lobby Name:" multiline="false" is-delayed="true" name="lobbyNameTxt" password="false" style="width: 375px; padding-left: 27px; margin-left: -27px; align-items: center; padding-right: -2px; justify-content: flex-start; font-size: 24px; -unity-text-align: upper-center; -unity-font-style: bold; -unity-font: none; color: rgb(0, 0, 0);" />
             <ui:Toggle label="Private" />
         </ui:VisualElement>
         <ui:VisualElement name="footcontainer" class="container" style="flex-grow: 0.07; justify-content: space-between; align-items: flex-end; flex-direction: row;">
