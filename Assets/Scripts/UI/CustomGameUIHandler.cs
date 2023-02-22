@@ -97,6 +97,7 @@ public class CustomGameUIHandler : MonoBehaviour
             var listView = new ListView(items, itemHeight, makeItem, bindItem);
 
             listView.onItemsChosen += objects => SteamManager.Instance.JoinLobby(items[listView.selectedIndex].Item2);
+            //SteamManager.Instance.currLobby = items[listView.selectedIndex].Item2;
             //listView.onSelectionChange += objects => Debug.Log(items[listView.selectedIndex].ToString());
 
             // List Style

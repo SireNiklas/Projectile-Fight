@@ -7,7 +7,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="bodycontainer" class="container" style="flex-grow: 1; justify-content: space-around; align-items: center;">
             <ui:TextField picking-mode="Ignore" label="Lobby Name:" multiline="false" is-delayed="true" name="lobbyNameTxt" password="false" style="width: 375px; padding-left: 27px; margin-left: -27px; align-items: center; padding-right: -2px; justify-content: flex-start; font-size: 24px; -unity-text-align: upper-center; -unity-font-style: bold; -unity-font: none; color: rgb(0, 0, 0);" />
-            <ui:Toggle label="Private" />
+            <ui:Toggle label="Private" name="lobbyVisibilityToggle" value="false" />
         </ui:VisualElement>
         <ui:VisualElement name="footcontainer" class="container" style="flex-grow: 0.07; justify-content: space-between; align-items: flex-end; flex-direction: row;">
             <ui:Label text="Build: In-Development" display-tooltip-when-elided="true" name="Label" class="buildlabel" style="color: rgb(255, 255, 255);" />

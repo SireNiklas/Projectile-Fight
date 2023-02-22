@@ -14,9 +14,12 @@ public class SteamManager : Singleton<SteamManager>
 {
     private FacepunchTransport transport = null;
     public Lobby? lobby { get; private set; } = null;
-    
+    public Lobby currLobby { get; private set; }
+    public SteamId currLobbySelected { get; private set; }
+
     GameObject UIObjectToHide, UIObjecToShow;
 
+    public bool isHost = false;
 
     public List<Lobby> activeLobbies = new List<Lobby>();
     public Lobby[] lobbiesList;
@@ -37,6 +40,11 @@ public class SteamManager : Singleton<SteamManager>
         UIManager.Instance.UIObjects[1].SetActive(false);
     }
 
+    // public void QueryMemebers(SteamId steamId)
+    // {
+    //     Debug.Log(currLobby.member);
+    // }
+    
     private void Start()
     {
         transport = GetComponent<FacepunchTransport>();
@@ -67,7 +75,7 @@ public class SteamManager : Singleton<SteamManager>
         NetworkManager.Singleton.OnClientConnectedCallback -= Singleton_OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectedCallback;
     }
-    
+
     private void OnApplicationQuit()
     {
         Disconnected();
@@ -82,29 +90,54 @@ public class SteamManager : Singleton<SteamManager>
             return;
         }
 
-        _lobby.SetPublic(); // Can be private lobby.
+        switch (!UIManager.Instance.isPublic)
+        {
+            case true:
+                _lobby.SetPublic();
+                break;
+            case false:
+                _lobby.SetPrivate();
+                break;
+        }
+
         _lobby.SetJoinable(true);
         _lobby.SetGameServer(_lobby.Owner.Id);
         _lobby.SetData("isTesting", "TRUE");
         _lobby.SetData("lobbyName", UIManager.Instance.lobbyName);
+        //urrLobby = _lobby.Id;
         Debug.Log("LOBBY ID " + _lobby.Id);
-
+        currLobby = _lobby;
     }
     
     private void SteamMatchmaking_OnLobbyEntered(Lobby _lobby)
     {
-        if (NetworkManager.Singleton.IsHost)
+        if (isHost)
         {
             return;
         }
-        
+        for (int i = 0; i < currLobby.MemberCount; i++)
+        {
+            foreach (var member in currLobby.Members)
+            {
+                currLobby.SetMemberData("memberName", SteamClient.Name);
+                Debug.Log("Member Leave: " + currLobby.GetMemberData(member, "memberName"));
+            }
+        }
+
         StartClient(_lobby.Owner.Id);
     }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby _lobby, Friend _friend)
     {
         Debug.Log("Member joined");
-
+        for (int i = 0; i < currLobby.MemberCount; i++)
+        {
+            foreach (var member in currLobby.Members)
+            {
+                currLobby.SetMemberData("memberName", SteamClient.Name);
+                Debug.Log("Member Joined: " + currLobby.GetMemberData(member, "memberName"));
+            }
+        }
     }
 
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby _lobby, Friend _friend)
@@ -121,6 +154,15 @@ public class SteamManager : Singleton<SteamManager>
     private void SteamMatchmaking_OnLobbyGameCreated(Lobby _lobby, uint _ip, ushort _port, SteamId _steamId)
     {
         Debug.Log("Lobby was created.");
+        
+        for (int i = 0; i < currLobby.MemberCount; i++)
+        {
+            foreach (var member in currLobby.Members)
+            {
+                currLobby.SetMemberData("memberName", SteamClient.Name);
+                Debug.Log(currLobby.GetMemberData(member, "memberName"));
+            }
+        }
     }
 
     // When game invite accept, or join on friend.
@@ -141,8 +183,12 @@ public class SteamManager : Singleton<SteamManager>
     [Command]
     public async void StartHost(int _maxMembers)
     {
-        NetworkManager.Singleton.OnServerStarted += Singleton_OnServerStarted;
-        NetworkManager.Singleton.StartHost();
+        //NetworkManager.Singleton.OnServerStarted += Singleton_OnServerStarted;
+        //NetworkManager.Singleton.StartHost();
+        
+        isHost = true;
+
+        UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[2], UIObjecToShow = UIManager.Instance.UIObjects[3]);
 
         lobby = await SteamMatchmaking.CreateLobbyAsync(_maxMembers);
 
@@ -156,6 +202,8 @@ public class SteamManager : Singleton<SteamManager>
         NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectedCallback;
         
+        UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[2], UIObjecToShow = UIManager.Instance.UIObjects[4]);
+
         if (NetworkManager.Singleton.StartClient())
         {
             Debug.Log("Client has started");
