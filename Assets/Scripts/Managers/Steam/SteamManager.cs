@@ -106,11 +106,19 @@ public class SteamManager : Singleton<SteamManager>
         _lobby.SetData("lobbyName", UIManager.Instance.lobbyName);
         //urrLobby = _lobby.Id;
         Debug.Log("LOBBY ID " + _lobby.Id);
-        currLobby = _lobby;
     }
     
     private void SteamMatchmaking_OnLobbyEntered(Lobby _lobby)
     {
+        for (int i = 0; i < currLobby.MemberCount; i++)
+        {
+            foreach (var member in currLobby.Members)
+            {
+                // currLobby.SetMemberData("memberName", SteamClient.Name);
+                Debug.Log("Member Joined: " + member.Name);
+            }
+        }
+        
         if (isHost)
         {
             return;
@@ -123,21 +131,14 @@ public class SteamManager : Singleton<SteamManager>
                 Debug.Log("Member Leave: " + currLobby.GetMemberData(member, "memberName"));
             }
         }
-
+        currLobby = _lobby;
         StartClient(_lobby.Owner.Id);
     }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby _lobby, Friend _friend)
     {
         Debug.Log("Member joined");
-        for (int i = 0; i < currLobby.MemberCount; i++)
-        {
-            foreach (var member in currLobby.Members)
-            {
-                currLobby.SetMemberData("memberName", SteamClient.Name);
-                Debug.Log("Member Joined: " + currLobby.GetMemberData(member, "memberName"));
-            }
-        }
+
     }
 
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby _lobby, Friend _friend)

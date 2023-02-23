@@ -8,9 +8,7 @@
                 <ui:Button text="Lobby Options?" display-tooltip-when-elided="true" class="button" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="bodycontainer" class="container" style="flex-grow: 1; flex-direction: column; justify-content: space-around; align-items: stretch;">
-            <ui:ListView focusable="true" name="ListView" style="justify-content: space-around; flex-grow: 1; align-items: stretch;" />
-        </ui:VisualElement>
+        <ui:VisualElement name="bodycontainer" class="container" style="flex-grow: 1; flex-direction: column; justify-content: space-around; align-items: stretch;" />
         <ui:VisualElement name="footcontainer" class="container" style="flex-grow: 0.07; justify-content: space-between; align-items: flex-end; flex-direction: row;">
             <ui:Label text="Build: In-Development" display-tooltip-when-elided="true" class="buildlabel" style="color: rgb(255, 255, 255);" />
             <ui:Button text="Back" display-tooltip-when-elided="true" name="back" class="button" />

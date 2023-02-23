@@ -15,7 +15,9 @@ public class ClientLobbyUIHandler : MonoBehaviour
         Button backBtn = root.Q<Button>("back");
         Label lobbyNameLbl = root.Q<Label>("lobbyNameLbl");
 
-        lobbyNameLbl.text = UIManager.Instance.lobbyName;
+        Debug.Log(SteamManager.Instance.currLobby.GetData("lobbyName"));
+        
+        lobbyNameLbl.text = SteamManager.Instance.currLobby.GetData("lobbyName");
         backBtn.clicked += () => UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[4], UIObjecToShow = UIManager.Instance.UIObjects[1]);
     }
 
