@@ -184,12 +184,12 @@ public class SteamManager : Singleton<SteamManager>
     [Command]
     public async void StartHost(int _maxMembers)
     {
-        //NetworkManager.Singleton.OnServerStarted += Singleton_OnServerStarted;
-        //NetworkManager.Singleton.StartHost();
+        NetworkManager.Singleton.OnServerStarted += Singleton_OnServerStarted;
+        NetworkManager.Singleton.StartHost();
         
         isHost = true;
 
-        UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[2], UIObjecToShow = UIManager.Instance.UIObjects[3]);
+        //UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[2], UIObjecToShow = UIManager.Instance.UIObjects[3]);
 
         lobby = await SteamMatchmaking.CreateLobbyAsync(_maxMembers);
 
@@ -203,7 +203,7 @@ public class SteamManager : Singleton<SteamManager>
         NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectedCallback;
         
-        UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[2], UIObjecToShow = UIManager.Instance.UIObjects[4]);
+       //UIManager.Instance.SwapUI(UIObjectToHide = UIManager.Instance.UIObjects[2], UIObjecToShow = UIManager.Instance.UIObjects[4]);
 
         if (NetworkManager.Singleton.StartClient())
         {

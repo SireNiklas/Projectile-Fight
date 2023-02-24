@@ -29,6 +29,7 @@ public class CreateGameUIHandler : MonoBehaviour
             UIManager.Instance.lobbyName = lobbyNameTxt.text;
             UIManager.Instance.isPublic = lobbyVisibilityToggle.value;
             SteamManager.Instance.StartHost(4);
+            this.gameObject.SetActive(false);
         };
         
         backBtn.clicked += () =>
