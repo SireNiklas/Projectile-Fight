@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : NetworkBehaviour
 {
     public PlayerStatsHandler PlayerStatsHandler;
     public GameObject Parent;
@@ -10,10 +11,6 @@ public class Projectile : MonoBehaviour
     //[SerializeField] private GameObject _particles;
 
     private Vector3 _dir;
-
-    private void Start()
-    {
-    }
 
     public void Init(Vector3 dir)
     {
@@ -26,21 +23,5 @@ public class Projectile : MonoBehaviour
         //AudioSource.PlayClipAtPoint(_destroyClip, transform.position);
         //Instantiate(_particles, transform.position, Quaternion.identity);
         Destroy(gameObject);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // Updates Clients Side!!!! DO NOT MESS THIS UP AGIAN!!!
-        if (other.gameObject.CompareTag("Player") && other.gameObject != Parent) {
-            other.gameObject.GetComponent<PlayerStatsHandler>().RequestUpdateHealthServerRPC();
-            other.gameObject.GetComponent<PlayerStatsHandler>().TakeDamage();
-            other.gameObject.GetComponent<PlayerStatsHandler>().LocalUpdateHealth();
-            Destroy(this);
-        }
-
-        if (other.gameObject.CompareTag("Static")) {
-            Destroy(this);
-        }
-
     }
 }

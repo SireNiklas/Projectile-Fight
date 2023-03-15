@@ -20,6 +20,8 @@ public class CombatController : NetworkBehaviour
     private Vector3 aimDir;
     private Vector3 aimAt;
 
+    [SerializeField] private AudioClip[] _audioClips;
+
     private void Start()
     {
         _firstPersonController = GetComponent<FirstPersonController>();
@@ -50,7 +52,6 @@ private void Update()
 
                 // Fire locally immediately
                 ExecuteShoot(aimDir);
-                StartCoroutine(ToggleLagIndicator());
             }
             else
             {
@@ -60,7 +61,6 @@ private void Update()
 
                 // Fire locally immediately
                 ExecuteShoot(aimAt);
-                StartCoroutine(ToggleLagIndicator());
             }
         }
     }
@@ -74,16 +74,22 @@ private void Update()
     [ClientRpc]
     private void FireClientRpc(Vector3 dir)
     {
-        if (!IsOwner) /*IsServer works, if your not giving anyother input. Same !IsOwner*/ ExecuteShoot(dir);
+        if (!IsOwner) ExecuteShoot(dir);
     }
 
-    private void ExecuteShoot(Vector3 dir)
+    private AudioClip RandomClip()
     {
+        return _audioClips[Random.Range(0, _audioClips.Length)];
+    }
+    
+    private void ExecuteShoot(Vector3 dir, ServerRpcParams serverRpcParams = default)
+    {
+        AudioSource.PlayClipAtPoint(RandomClip(), transform.position);
+        
         var projectile = Instantiate(_projectile, _spawner.position, Quaternion.LookRotation(dir, Vector3.up));
         projectile.Init(dir * _projectileSpeed);
-        projectile.PlayerStatsHandler = this.GetComponent<PlayerStatsHandler>();
-        projectile.Parent = this.gameObject;
-        //AudioSource.PlayClipAtPoint(_spawnClip, transform.position);
+        projectile.PlayerStatsHandler = GetComponent<PlayerStatsHandler>();
+        projectile.Parent = gameObject;
     }
 
     private void OnGUI()
@@ -92,16 +98,5 @@ private void Update()
         if (_fired) GUILayout.Label("FIRED LOCALLY");
 
         GUILayout.EndArea();
-    }
-
-    /// <summary>
-    /// If you want to test lag locally, go into the "NetworkButtons" script and uncomment the artificial lag
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator ToggleLagIndicator()
-    {
-        _fired = true;
-        yield return new WaitForSeconds(0.2f);
-        _fired = false;
     }
 }
