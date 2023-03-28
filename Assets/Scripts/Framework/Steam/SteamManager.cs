@@ -8,7 +8,6 @@ using Netcode.Transports.Facepunch;
 using Sir.Core.Singletons;
 using System.Linq;
 using System.Collections.Generic;
-using Mono.CSharp;
 
 public class SteamManager : Singleton<SteamManager>
 {

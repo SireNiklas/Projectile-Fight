@@ -11,6 +11,8 @@ public class NetworkMovementComponent : NetworkBehaviour
 	//TODO SERVER TICK RATE
 	//private NetworkTime serverTick = NetworkManager.Singleton.ServerTime;
 	//private int TestTick;
+
+	[SerializeField] private GameObject Capsule;
 	
 #region Player, Camera, Jump, Grounded
 
@@ -91,26 +93,32 @@ public class NetworkMovementComponent : NetworkBehaviour
     #endregion
 #endregion
 
-    // Tick Settings
-    private int _tick = 0;
-    private float _tickRate = 1f / 60f;
-    private float _tickRateDeltaTime = 0f;
-    private int _lastProcessedTick = -0;
+#region Tick Parameters
 
-    // Memory Settings? Tick Memory?
-    private const int BUFFER_SIZE = 1024;
-    private InputState[] _inputStates = new InputState[BUFFER_SIZE];
-    private TransformState[] _transformStates = new TransformState[BUFFER_SIZE];
+	// Tick Settings
+	private int _tick = 0;
+	private float _tickRate = 1f / 60f;
+	private float _tickRateDeltaTime = 0f;
+	private int _lastProcessedTick = -0;
+
+	// Memory Settings? Tick Memory?
+	private const int BUFFER_SIZE = 1024;
+	private InputState[] _inputStates = new InputState[BUFFER_SIZE];
+	private TransformState[] _transformStates = new TransformState[BUFFER_SIZE];
+#endregion
+
 
     // Local and Server Position Veriables
     public NetworkVariable<TransformState> ServerTransformState = new NetworkVariable<TransformState>();
     public TransformState _previousTransformState;
     
-    //TODO Gizmo Settings | Temp
-    [Header("Gizmo Parameters")]
-    [SerializeField] private MeshFilter _meshFilter;
-    [SerializeField] private Color _color;
-    
+# region  GIZMOS
+	//TODO Gizmo Settings | Temp
+	[Header("Gizmo Parameters")]
+	[SerializeField] private MeshFilter _meshFilter;
+	[SerializeField] private Color _color;
+#endregion
+
     private void OnEnable()
     {
 	    ServerTransformState.OnValueChanged += OnServerStateChanged;
@@ -227,7 +235,7 @@ public class NetworkMovementComponent : NetworkBehaviour
 	    }
     }
 
-    public void ProcessLocalPlayerMovement(Vector2 movementInput, Vector2 lookInput)
+    public void ProcessLocalPlayerMovement(Vector2 movementInput, Vector2 lookInput, bool jumpInput)
     {
         _tickRateDeltaTime += Time.deltaTime;
         if (_tickRateDeltaTime > _tickRate)
@@ -236,19 +244,21 @@ public class NetworkMovementComponent : NetworkBehaviour
 
             if (!IsServer)
             {
-	            MovePlayerServerRpc(_tick, movementInput, lookInput);
+	            MovePlayerServerRpc(_tick, movementInput, lookInput, jumpInput);
 	            GroundedCheck();
-	            JumpAndGravity();
+	            JumpAndGravity(jumpInput);
 	            MovePlayer(movementInput);
                 RotatePlayer(lookInput);
                 SaveState(movementInput, lookInput, bufferIndex);
+                Debug.Log($"Am I the server? {IsServer} | Client");
             }
             else
             {
 	            GroundedCheck();
-	            JumpAndGravity();
+	            JumpAndGravity(jumpInput);
 	            MovePlayer(movementInput);
                 RotatePlayer(lookInput);
+                Debug.Log($"Am I the server? {IsServer} | Server");
 
                 TransformState state = new TransformState()
                 {
@@ -263,7 +273,7 @@ public class NetworkMovementComponent : NetworkBehaviour
                 _previousTransformState = ServerTransformState.Value;
                 ServerTransformState.Value = state;
             }
-            Debug.Log($"Local Transform UPDATE = {transform.position} | Server Transform UPDATE = {ServerTransformState.Value.Position}");
+            //Debug.Log($"Local Transform UPDATE = {transform.position} | Server Transform UPDATE = {ServerTransformState.Value.Position}");
 
 
             _tickRateDeltaTime -= _tickRate;
@@ -281,6 +291,8 @@ public class NetworkMovementComponent : NetworkBehaviour
                 transform.position = ServerTransformState.Value.Position;
                 transform.rotation = ServerTransformState.Value.Rotation;
             }
+
+            //if (ServerTransformState.Value.Jump) transform.position = ServerTransformState.Value.Position;
 
             _tickRateDeltaTime -= _tickRate;
             _tick++;
@@ -352,8 +364,8 @@ public class NetworkMovementComponent : NetworkBehaviour
 	    Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 	    Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
     }
-    
-    private void JumpAndGravity()
+
+    private void JumpAndGravity(bool jumpInput)
     {
 	    if (Grounded)
     	{
@@ -367,13 +379,10 @@ public class NetworkMovementComponent : NetworkBehaviour
     		}
      
     		// Jump
-    		if (_firstPersonInputHandler.jump && _jumpTimeoutDelta <= 0.0f)
+    		if (jumpInput && _jumpTimeoutDelta <= 0.0f)
     		{
-	            Debug.Log($"BEFORE JUMP {_verticalVelocity}");
-	            
 	            // the square root of H * -2 * G = how much velocity needed to reach desired height
     			_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-                Debug.Log($"AFTER JUMP {_verticalVelocity}");
     		}
      
     		// jump timeout
@@ -405,7 +414,7 @@ public class NetworkMovementComponent : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void MovePlayerServerRpc(int tick, Vector2 movementInput, Vector2 lookInput)
+    private void MovePlayerServerRpc(int tick, Vector2 movementInput, Vector2 lookInput, bool jumpInput)
     {
 	    if (_lastProcessedTick + 1 != tick)
         {
@@ -416,6 +425,7 @@ public class NetworkMovementComponent : NetworkBehaviour
 	    _lastProcessedTick = tick;
 	    MovePlayer(movementInput);
         RotatePlayer(lookInput);
+        JumpAndGravity(jumpInput);
 
         TransformState currentTransformState = new TransformState()
         {
@@ -427,15 +437,6 @@ public class NetworkMovementComponent : NetworkBehaviour
 
         _previousTransformState = ServerTransformState.Value;
         ServerTransformState.Value = currentTransformState;
-    }
-    
-    private void OnDrawGizmos()
-    {
-	    if (ServerTransformState.Value != null)
-	    {
-		    Gizmos.color = _color;
-		    Gizmos.DrawMesh(_meshFilter.mesh, ServerTransformState.Value.Position);
-	    }
     }
 
     private void OnDrawGizmosSelected()

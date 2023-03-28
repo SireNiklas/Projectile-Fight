@@ -54,7 +54,7 @@ public class FirstPersonInputHandler : NetworkBehaviour
     {
 	    if (IsClient & IsLocalPlayer)
 	    { 
-		    _networkMovementComponent.ProcessLocalPlayerMovement(movementInput, lookInput);
+		    _networkMovementComponent.ProcessLocalPlayerMovement(movementInput, lookInput, jump);
 	    }
 	    else
 	    {

@@ -1,0 +1,14 @@
+{
+  "GlobalObjectId_V1-2-707acc8dffb72b144bb1ffbe1c965f3d-700733254-0": {
+    "GameObjectId": "GlobalObjectId_V1-2-707acc8dffb72b144bb1ffbe1c965f3d-700733254-0",
+    "CommentText": "Sedction encompassing all managers for the game.",
+    "AssetGUID": "707acc8dffb72b144bb1ffbe1c965f3d",
+    "UniqueItemID": "GlobalObjectId_V1-2-707acc8dffb72b144bb1ffbe1c965f3d-700733254-0"
+  },
+  "GlobalObjectId_V1-2-707acc8dffb72b144bb1ffbe1c965f3d-1328897374-0": {
+    "GameObjectId": "GlobalObjectId_V1-2-707acc8dffb72b144bb1ffbe1c965f3d-1328897374-0",
+    "CommentText": "Storage for all UIDocuments",
+    "AssetGUID": "707acc8dffb72b144bb1ffbe1c965f3d",
+    "UniqueItemID": "GlobalObjectId_V1-2-707acc8dffb72b144bb1ffbe1c965f3d-1328897374-0"
+  }
+}
