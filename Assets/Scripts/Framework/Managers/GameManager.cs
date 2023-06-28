@@ -10,6 +10,11 @@ public class GameManager : Singleton<GameManager>
     public bool isHost;
     public ulong myClientId;
 
+    private void Awake()
+    {
+        Application.targetFrameRate = 144;
+    }
+
     //[Header("Message System")]
     //[SerializeField] private int maxMessages = 20;
     //private List<Message> messageList = new List<Message>();
