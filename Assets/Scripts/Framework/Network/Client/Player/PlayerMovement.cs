@@ -4,14 +4,8 @@ using PRN;
 using Unity.Netcode;
 using UnityEngine;
 
-public class NetPlayer : NetworkBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
-
-	[SerializeField]
-	private Material ownerMaterial;
-	[SerializeField]
-	private Material clientMaterial;
-
     [SerializeField]
     private GameObject camera;
     [SerializeField]
@@ -35,6 +29,11 @@ public class NetPlayer : NetworkBehaviour
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
     [SerializeField] private GameObject CinemachineCameraTarget;
 
+	[SerializeField]
+	private bool showAvatar;
+	[SerializeField]
+    private GameObject avatar;
+
     // ADDED
     private void Awake()
     {
@@ -55,7 +54,7 @@ public class NetPlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn() {
 		base.OnNetworkSpawn();
-		looper = new Looper(TimeSpan.FromSeconds(1 / 60f));
+		looper = new Looper(TimeSpan.FromSeconds(1 / 128f));
 		NetworkRole role;
 		if (IsServer) {
 			role = IsOwner ? NetworkRole.HOST : NetworkRole.SERVER;
@@ -72,9 +71,13 @@ public class NetPlayer : NetworkBehaviour
 		networkHandler.onSendInputToServer += SendInputServerRpc;
 		networkHandler.onSendStateToClient += SendStateClientRpc;
 		networkHandler.onState += OnState;
-        GetComponent<Renderer>().material = IsOwner ? ownerMaterial : clientMaterial;
+        //GetComponent<Renderer>().material = IsOwner ? ownerMaterial : clientMaterial;
+		showAvatar = IsOwner ? false : true;
+		avatar.SetActive(showAvatar);
         //camera.SetActive(IsOwner);
         Cursor.lockState = CursorLockMode.Locked;
+
+		
 
 
         // ADDED
@@ -84,8 +87,11 @@ public class NetPlayer : NetworkBehaviour
         }
     }
 
-	private void FixedUpdate() {
-		looper.Tick(TimeSpan.FromSeconds(Time.fixedDeltaTime));
+    //double acc = 0;
+
+    private void FixedUpdate() {
+
+            looper.Tick(TimeSpan.FromSeconds(Time.fixedDeltaTime));
 	}
 
 	[ServerRpc]

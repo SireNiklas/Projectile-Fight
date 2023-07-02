@@ -8,7 +8,7 @@ public class PlayerProcessor: MonoBehaviour, PRN.Processor<PlayerInput, PlayerSt
 	[SerializeField]
 	private float movementSpeed = 8f;
     [SerializeField]
-    private float lookSensitivity = 200f;
+    private float lookSensitivity = 300f;
     [SerializeField]
 	private float jumpHeight = 2.5f;
 
@@ -24,8 +24,7 @@ public class PlayerProcessor: MonoBehaviour, PRN.Processor<PlayerInput, PlayerSt
     [Header("Camera Parameters")]
     [Tooltip("Rotation speed of the character")]
     [Range(10, 30)]
-    [SerializeField] private float RotationSpeed = 1.0f;
-    [Tooltip("How far in degrees can you move the camera up")]
+    //[SerializeField] private float RotationSpeed = 1.0f;
     [SerializeField] private float TopClamp = 90.0f;
     [Tooltip("How far in degrees can you move the camera down")]
     [SerializeField] private float BottomClamp = -90.0f;
@@ -52,8 +51,8 @@ public class PlayerProcessor: MonoBehaviour, PRN.Processor<PlayerInput, PlayerSt
 
     public PlayerState Process(PlayerInput input, TimeSpan deltaTime) {
 
-        _cinemachineTargetPitch -= input.deltaLookX * RotationSpeed;
-        _rotationVelocity = input.deltaLookY * RotationSpeed;
+        _cinemachineTargetPitch -= input.deltaLookX;
+        _rotationVelocity = input.deltaLookY;
 
         // clamp our pitch rotation
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
@@ -65,11 +64,11 @@ public class PlayerProcessor: MonoBehaviour, PRN.Processor<PlayerInput, PlayerSt
         transform.Rotate(Vector3.up * _rotationVelocity * lookSensitivity * (float)deltaTime.TotalSeconds);
 
         //transform.Rotate(Vector3.up * input.deltaLookY * lookSensitivity * (float)deltaTime.TotalSeconds);
-        movement = (transform.forward * input.forward + transform.right * input.right).normalized * movementSpeed * (float)deltaTime.TotalSeconds;
+        movement = (transform.forward * input.forward + transform.right * input.right).normalized * movementSpeed/1.3f * (float)deltaTime.TotalSeconds;
         if (controller.isGrounded) {
 			gravity = Vector3.zero;
 			if (input.jump) {
-				gravity = Vector3.up * Mathf.Sqrt(jumpHeight * 2 * -gravityForce) * (float) deltaTime.TotalSeconds;
+				gravity = Vector3.up * Mathf.Sqrt(jumpHeight * -gravityForce) * (float) deltaTime.TotalSeconds;
 			}
         }
 		if (gravity.y > 0) {
@@ -77,7 +76,7 @@ public class PlayerProcessor: MonoBehaviour, PRN.Processor<PlayerInput, PlayerSt
 		} else {
 			gravity += Vector3.up * gravityForce * Mathf.Pow((float) deltaTime.TotalSeconds, 2) * 1.3f;
 		}
-		controller.Move(movement + gravity);
+		controller.Move(movement + gravity * 2);
 		return new PlayerState() {
 			position = transform.position,
             rotation = transform.rotation,

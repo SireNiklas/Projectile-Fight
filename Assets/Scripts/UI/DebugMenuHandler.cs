@@ -5,7 +5,6 @@ using UnityEngine.UIElements;
 
 public class DebugMenuHandler: MonoBehaviour
 {
-    SteamLobbyHandler steamLobbyHandler;
     GameObject UIObjectToHide, UIObjecToShow;
 
     private void OnEnable()
